@@ -1,6 +1,7 @@
 /// <reference types='cypress' />
 /// <reference types='../support' />
 
+import { faker } from '@faker-js/faker';
 import SignInPageObject from '../support/pages/signIn.pageObject';
 import UserPageObject from '../support/pages/user.pageObject';
 import ArticlePageObject from '../support/pages/article.pageObject';
@@ -24,9 +25,9 @@ describe('User', () => {
         secondUser = generatedSecondUser;
 
         article = {
-          title: `Article ${Date.now()}`,
-          description: `Description ${Date.now()}`,
-          body: `Body ${Date.now()}`
+          title: faker.lorem.sentence(),
+          description: faker.lorem.words(3),
+          body: faker.lorem.paragraph()
         };
 
         cy.register(firstUser.email, firstUser.username, firstUser.password);
@@ -53,14 +54,34 @@ describe('User', () => {
     });
   });
 
-  it('should be able to follow the another user', () => {
+  it('should be able to follow and unfollow another user', () => {
     cy.visit(`/#/@${firstUser.username}`);
 
     cy.location('hash').should('include', `@${firstUser.username}`);
     cy.get('.user-info').should('exist');
 
     userPage.clickFollowBtn();
-
     cy.getByDataCy('follow-btn').should('exist');
+
+    cy.visit('/#/');
+
+    cy.intercept('GET', `**/profiles/${firstUser.username}`, {
+      statusCode: 200,
+      body: {
+        profile: {
+          username: firstUser.username,
+          bio: null,
+          image: null,
+          following: true
+        }
+      }
+    }).as('followedProfile');
+
+    cy.visit(`/#/@${firstUser.username}`);
+    cy.wait('@followedProfile');
+
+    cy.getByDataCy('unfollow-btn').should('exist');
+    userPage.clickUnfollowBtn();
+    cy.getByDataCy('unfollow-btn').should('exist');
   });
 });

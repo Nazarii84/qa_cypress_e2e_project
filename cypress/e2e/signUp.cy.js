@@ -1,6 +1,7 @@
 /// <reference types='cypress' />
 /// <reference types='../support' />
 
+import { faker } from '@faker-js/faker';
 import SignUpPageObject from '../support/pages/signUp.pageObject';
 import HomePageObject from '../support/pages/home.pageObject';
 
@@ -12,9 +13,12 @@ describe('Sign Up page', () => {
 
   beforeEach(() => {
     cy.task('db:clear');
-    cy.task('generateUser').then((generatedUser) => {
-      user = generatedUser;
-    });
+
+    user = {
+      username: faker.internet.userName(),
+      email: faker.internet.email(),
+      password: faker.internet.password()
+    };
   });
 
   it('should provide an ability to sign up with valid credentials', () => {
@@ -34,7 +38,7 @@ describe('Sign Up page', () => {
 
     signUpPage.visit();
 
-    signUpPage.typeUsername(`${user.username}new`);
+    signUpPage.typeUsername(faker.internet.userName());
     signUpPage.typeEmail(user.email);
     signUpPage.typePassword(user.password);
     signUpPage.clickSignUpBtn();

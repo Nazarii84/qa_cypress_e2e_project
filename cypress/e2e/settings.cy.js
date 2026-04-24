@@ -1,6 +1,7 @@
 /// <reference types='cypress' />
 /// <reference types='../support' />
 
+import { faker } from '@faker-js/faker';
 import SignInPageObject from '../support/pages/signIn.pageObject';
 import SettingsPageObject from '../support/pages/settings.pageObject';
 import HomePageObject from '../support/pages/home.pageObject';
@@ -30,7 +31,7 @@ describe('Settings page', () => {
   });
 
   it('should provide an ability to update username', () => {
-    const newUsername = `updated${Date.now()}`;
+    const newUsername = faker.internet.userName();
 
     settingsPage.typeUsername(newUsername);
     settingsPage.clickUpdateBtn();
@@ -39,7 +40,7 @@ describe('Settings page', () => {
   });
 
   it('should provide an ability to update bio', () => {
-    const newBio = `Updated bio ${Date.now()}`;
+    const newBio = faker.person.bio();
 
     settingsPage.typeBio(newBio);
     settingsPage.clickUpdateBtn();
@@ -50,7 +51,7 @@ describe('Settings page', () => {
   });
 
   it('should provide an ability to update an email', () => {
-    const newEmail = `updated${Date.now()}@mail.com`;
+    const newEmail = faker.internet.email();
 
     cy.intercept('POST', '/user').as('updateUser');
 
@@ -63,7 +64,7 @@ describe('Settings page', () => {
   });
 
   it('should provide an ability to update password', () => {
-    const newPassword = 'NewPassword123!';
+    const newPassword = faker.internet.password();
 
     settingsPage.typePassword(newPassword);
     settingsPage.clickUpdateBtn();

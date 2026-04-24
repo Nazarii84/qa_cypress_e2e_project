@@ -1,6 +1,7 @@
 /// <reference types='cypress' />
 /// <reference types='../support' />
 
+import { faker } from '@faker-js/faker';
 import SignInPageObject from '../support/pages/signIn.pageObject';
 import ArticlePageObject from '../support/pages/article.pageObject';
 
@@ -19,15 +20,15 @@ describe('Article', () => {
       user = generatedUser;
 
       article = {
-        title: `Article title ${Date.now()}`,
-        description: `Article description ${Date.now()}`,
-        body: `Article body ${Date.now()}`
+        title: faker.lorem.sentence(),
+        description: faker.lorem.words(3),
+        body: faker.lorem.paragraph()
       };
 
       updatedArticle = {
-        title: `Updated title ${Date.now()}`,
-        description: `Updated description ${Date.now()}`,
-        body: `Updated body ${Date.now()}`
+        title: faker.lorem.sentence(),
+        description: faker.lorem.words(3),
+        body: faker.lorem.paragraph()
       };
 
       cy.register(user.email, user.username, user.password);
