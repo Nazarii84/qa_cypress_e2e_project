@@ -43,27 +43,40 @@ describe('User', () => {
         articlePage.typeDescription(article.description);
         articlePage.typeBody(article.body);
         articlePage.clickPublishArticleBtn();
+
         cy.url().should('include', '#/articles/');
 
         signInPage.visit();
         signInPage.typeEmail(secondUser.email);
         signInPage.typePassword(secondUser.password);
         signInPage.clickSignInBtn();
+
         cy.location('hash').should('eq', '#/');
       });
     });
   });
 
   it('should be able to follow and unfollow another user', () => {
+    cy.intercept('GET', `**/profiles/${firstUser.username}`, {
+      statusCode: 200,
+      body: {
+        profile: {
+          username: firstUser.username,
+          bio: null,
+          image: null,
+          following: false
+        }
+      }
+    }).as('notFollowedProfile');
+
     cy.visit(`/#/@${firstUser.username}`);
+    cy.wait('@notFollowedProfile');
 
     cy.location('hash').should('include', `@${firstUser.username}`);
     cy.get('.user-info').should('exist');
-
-    userPage.clickFollowBtn();
     cy.getByDataCy('follow-btn').should('exist');
 
-    cy.visit('/#/');
+    userPage.clickFollowBtn();
 
     cy.intercept('GET', `**/profiles/${firstUser.username}`, {
       statusCode: 200,
@@ -77,11 +90,30 @@ describe('User', () => {
       }
     }).as('followedProfile');
 
-    cy.visit(`/#/@${firstUser.username}`);
+    cy.reload();
     cy.wait('@followedProfile');
 
     cy.getByDataCy('unfollow-btn').should('exist');
+    cy.getByDataCy('follow-btn').should('not.exist');
+
     userPage.clickUnfollowBtn();
-    cy.getByDataCy('unfollow-btn').should('exist');
+
+    cy.intercept('GET', `**/profiles/${firstUser.username}`, {
+      statusCode: 200,
+      body: {
+        profile: {
+          username: firstUser.username,
+          bio: null,
+          image: null,
+          following: false
+        }
+      }
+    }).as('unfollowedProfile');
+
+    cy.reload();
+    cy.wait('@unfollowedProfile');
+
+    cy.getByDataCy('follow-btn').should('exist');
+    cy.getByDataCy('unfollow-btn').should('not.exist');
   });
 });

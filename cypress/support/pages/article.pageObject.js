@@ -1,43 +1,79 @@
-class ArticlePageObject {
+import PageObject from '../PageObject';
+
+class ArticlePageObject extends PageObject {
+  get newArticleLink() {
+    return cy.contains('New Article');
+  }
+
+  get titleField() {
+    return cy.get('input[placeholder="Article Title"]');
+  }
+
+  get descriptionField() {
+    return cy.get('input[placeholder="What\'s this article about?"]');
+  }
+
+  get bodyField() {
+    return cy.get('textarea[placeholder="Write your article (in markdown)"]');
+  }
+
+  get publishArticleBtn() {
+    return cy.contains('button', 'Publish Article');
+  }
+
+  get editArticleBtn() {
+    return cy.contains('Edit Article');
+  }
+
+  get deleteArticleBtn() {
+    return cy.contains('Delete Article');
+  }
+
+  get articleTitle() {
+    return cy.get('h1');
+  }
+
+  get articleBody() {
+    return cy.get('.article-content');
+  }
+
   clickNewArticle() {
-    cy.contains('New Article').click();
+    this.newArticleLink.click();
   }
 
   typeTitle(title) {
-    cy.get('input[placeholder="Article Title"]').clear();
-    cy.get('input[placeholder="Article Title"]').type(title);
+    this.titleField.clear();
+    this.titleField.type(title);
   }
 
   typeDescription(description) {
-    cy.get('input[placeholder="What\'s this article about?"]').clear();
-    cy.get('input[placeholder="What\'s this article about?"]')
-      .type(description);
+    this.descriptionField.clear();
+    this.descriptionField.type(description);
   }
 
   typeBody(body) {
-    cy.get('textarea[placeholder="Write your article (in markdown)"]').clear();
-    cy.get('textarea[placeholder="Write your article (in markdown)"]')
-      .type(body);
+    this.bodyField.clear();
+    this.bodyField.type(body);
   }
 
   clickPublishArticleBtn() {
-    cy.contains('button', 'Publish Article').click();
+    this.publishArticleBtn.click();
   }
 
   clickEditArticleBtn() {
-    cy.contains('Edit Article').click();
+    this.editArticleBtn.click();
   }
 
   clickDeleteArticleBtn() {
-    cy.contains('Delete Article').click();
+    this.deleteArticleBtn.click();
   }
 
   assertArticleTitle(title) {
-    cy.get('h1').should('contain', title);
+    this.articleTitle.should('contain', title);
   }
 
   assertArticleBody(body) {
-    cy.get('.article-content').should('contain', body);
+    this.articleBody.should('contain', body);
   }
 }
 

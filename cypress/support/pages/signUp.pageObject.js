@@ -1,22 +1,38 @@
-class SignUpPageObject {
-  visit() {
-    cy.visit('/#/register');
+import PageObject from '../PageObject';
+
+class SignUpPageObject extends PageObject {
+  url = '/#/register';
+
+  get usernameField() {
+    return cy.get('input[placeholder="Username"]');
+  }
+
+  get emailField() {
+    return cy.get('input[placeholder="Email"]');
+  }
+
+  get passwordField() {
+    return cy.get('input[placeholder="Password"]');
+  }
+
+  get signUpBtn() {
+    return cy.contains('button', 'Sign up');
   }
 
   typeUsername(username) {
-    cy.get('input[placeholder="Username"]').type(username);
+    this.usernameField.type(username);
   }
 
   typeEmail(email) {
-    cy.get('input[placeholder="Email"]').type(email);
+    this.emailField.type(email);
   }
 
   typePassword(password) {
-    cy.get('input[placeholder="Password"]').type(password);
+    this.passwordField.type(password);
   }
 
   clickSignUpBtn() {
-    cy.contains('button', 'Sign up').click();
+    this.signUpBtn.click();
   }
 }
 

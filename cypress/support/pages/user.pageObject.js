@@ -1,4 +1,6 @@
-class UserPageObject {
+import PageObject from '../PageObject';
+
+class UserPageObject extends PageObject {
   get followBtn() {
     return cy.getByDataCy('follow-btn');
   }

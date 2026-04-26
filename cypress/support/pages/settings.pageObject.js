@@ -1,4 +1,6 @@
-class SettingsPageObject {
+import PageObject from '../PageObject';
+
+class SettingsPageObject extends PageObject {
   visit() {
     cy.contains('Settings').click();
   }
